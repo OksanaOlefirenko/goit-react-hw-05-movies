@@ -12,6 +12,6 @@ export const BackLink = ({ to, children }) => {
 };
 
 BackLink.propTypes = {
-  to: PropTypes.string,
+  to: PropTypes.object,
   children: PropTypes.any,
 };
