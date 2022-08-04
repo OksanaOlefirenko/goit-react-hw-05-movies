@@ -1,19 +1,33 @@
-// import { Route, Routes } from 'react-router-dom';
-import { Container, Header, Logo, Link } from './App.styled';
-import { GiFilmProjector } from 'react-icons/gi';
+import { Route, Routes, Navigate } from 'react-router-dom';
+import { SharedLayout } from 'components/SharedLayout';
+import { lazy } from 'react';
+
+const createAsyncPage = componentName => {
+  return lazy(() =>
+    import(`../../pages/${componentName}`).then(module => ({
+      default: module[componentName],
+    }))
+  );
+};
+
+const Home = createAsyncPage('Home');
+const Movies = createAsyncPage('Movies');
+const MovieDetails = createAsyncPage('MovieDetails');
+const CastPage = createAsyncPage('CastPage');
+const ReviewsPage = createAsyncPage('ReviewsPage');
 
 export const App = () => {
   return (
-    <Container>
-      <Header>
-        <Logo>
-          <GiFilmProjector size={40} color={'red'} /> The movie DB
-        </Logo>
-        <nav>
-          <Link to="/">Home</Link>
-          <Link to="/movies">Movies</Link>
-        </nav>
-      </Header>
-    </Container>
+    <Routes>
+      <Route path="/" element={<SharedLayout />}>
+        <Route index element={<Home />} />
+        <Route path="/movies" element={<Movies />} />
+        <Route path="/movies/:movieId" element={<MovieDetails />}>
+          <Route path="/movies/:movieId/cast" element={<CastPage />} />
+          <Route path="/movies/:movieId/reviews" element={<ReviewsPage />} />
+        </Route>
+        <Route path="*" element={<Navigate to="/" />} />
+      </Route>
+    </Routes>
   );
 };
