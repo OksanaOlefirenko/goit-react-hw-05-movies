@@ -6,27 +6,23 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Reviews } from 'components/Reviews';
 
-export const ReviewsPage = () => {
+const ReviewsPage = () => {
   const { movieId } = useParams();
   const [loading, setLoading] = useState(false);
   const [reviews, setReviews] = useState(null);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    async function fetchReviewsById() {
-      setLoading(true);
-      try {
-        const reviews = await getReviews(movieId);
-        if (reviews.length === 0) {
+    setLoading(true);
+    getReviews(movieId)
+      .then(results => {
+        if (results.length === 0) {
           return toast.error("Sorry, We don't have any reviews for this movie");
         }
-        setReviews(reviews);
-      } catch (error) {
-        toast.error('Actors not found');
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchReviewsById();
+        setReviews(results);
+      })
+      .catch(error => setError(error.message))
+      .finally(() => setLoading(false));
   }, [movieId]);
 
   return (
@@ -34,6 +30,9 @@ export const ReviewsPage = () => {
       <ToastContainer theme="colored" position="top-right" autoClose={3000} />
       {loading && <Loader />}
       {reviews && <Reviews reviews={reviews} />}
+      {error && <p>Something went wrong, please try again later!g</p>}
     </main>
   );
 };
+
+export default ReviewsPage;

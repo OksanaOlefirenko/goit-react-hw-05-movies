@@ -5,14 +5,14 @@ import { getMovieById } from 'moviesAPI';
 import { Loader } from 'components/Loader';
 import { BackLink } from 'components/BackLink';
 
-export const MovieDetails = () => {
+const MovieDetails = () => {
   const { movieId } = useParams();
   const [loading, setLoading] = useState(false);
   const [movie, setMovie] = useState(null);
   const [error, setError] = useState('');
 
   const location = useLocation();
-  const backLinkHref = location?.state?.from ?? '/movies';
+  const backLinkHref = location?.state?.from ?? '/';
 
   useEffect(() => {
     async function fetchMovieById() {
@@ -38,3 +38,5 @@ export const MovieDetails = () => {
     </main>
   );
 };
+
+export default MovieDetails;

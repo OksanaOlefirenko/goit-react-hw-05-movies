@@ -6,24 +6,23 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Cast } from 'components/Cast';
 
-export const CastPage = () => {
+const CastPage = () => {
   const { movieId } = useParams();
   const [loading, setLoading] = useState(false);
   const [actors, setActors] = useState(null);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    async function fetchCastById() {
-      setLoading(true);
-      try {
-        const actors = await getCast(movieId);
-        setActors(actors);
-      } catch (error) {
-        toast.error('Actors not found');
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchCastById();
+    setLoading(true);
+    getCast(movieId)
+      .then(results => {
+        if (results.length === 0) {
+          return toast.error('Sorry, actors not found');
+        }
+        setActors(results);
+      })
+      .catch(error => setError(error.message))
+      .finally(() => setLoading(false));
   }, [movieId]);
 
   return (
@@ -31,6 +30,9 @@ export const CastPage = () => {
       <ToastContainer theme="colored" position="top-right" autoClose={3000} />
       {loading && <Loader />}
       {actors && <Cast actors={actors} />}
+      {error && <p>Something went wrong, please try again later!g</p>}
     </main>
   );
 };
+
+export default CastPage;

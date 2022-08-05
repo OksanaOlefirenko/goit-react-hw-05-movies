@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { getSearchMovie } from '../moviesAPI';
 import { MoviesList } from 'components/MoviesList';
 
-export const Movies = () => {
+const Movies = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
   const [movies, setMovies] = useState([]);
@@ -55,3 +55,5 @@ export const Movies = () => {
     </main>
   );
 };
+
+export default Movies;
